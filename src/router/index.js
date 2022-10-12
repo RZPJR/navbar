@@ -3,7 +3,7 @@ import VueRouter from "vue-router";
 
 Vue.use(VueRouter);
 
-const routes = [{ path: "/", exact: true, redirect: "/rate-doggos" }];
+const routes = [];
 
 const router = new VueRouter({
   mode: "history",
