@@ -1,13 +1,13 @@
 import axios from 'axios'
 
 const actions = {
-    login: async ({ state, commit, dispatch }, payload) => {
+    fetchNavbar: async ({ state, commit, dispatch }, payload) => {
       try {
-        const { data } = await axios.get("https://apidev.edenfarm.tech/v1/menu")
+        let url = state.staff == 65536 ? 'https://apidev.edenfarm.tech/v1/menu' : 'https://apidev.edenfarm.tech/v1/menu/user/'+state.staff
+        const { data } = await axios.get(url)
         commit('setNavbar', data.data)
       } catch (error) {
-        // contoh
-        console.log('gagal');
+        console.log(error);
       }
     },
 }

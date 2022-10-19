@@ -4,7 +4,6 @@
             <NavBar v-if="!isLoading && ['Maintenance','Unauthorized','Forbidden','PageNotFound','InternalServerError'].indexOf($route.name) === -1"  v-show="getStatusLogin"/>
         </div>
         <v-main v-if="!isLoading">
-            <!-- <BreadCrumbsNew v-if="$route.meta.breadcrumbs" /> -->
             <router-view />
         </v-main>
     </div>
@@ -13,13 +12,11 @@
 
 <script>
     import NavBar from "./components/Navbar.vue";
-    // import { BreadCrumbsNew } from "@vue-mf/global";
 
     export default {
         name: "App",
         components: {
             NavBar,
-            // BreadCrumbsNew,
         },
         data() {
             return { isLoading: true };
