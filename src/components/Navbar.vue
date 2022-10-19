@@ -86,6 +86,7 @@
 </template>
 <script>
     import axios from 'axios';
+    import { mapActions } from 'vuex'
 
     import { ImageLogo } from "@vue-mf/global";
     import { BgNavbarNew } from "@vue-mf/global";
@@ -116,6 +117,9 @@
             logo_url: "",
         }),
         methods: {
+            ...mapActions([
+                'login',
+            ]),
             activeRoute(child) {
                 let value = false
                 child.forEach(e => {
@@ -158,6 +162,10 @@
             }
         },
         created () {
+            // initiate
+            console.log(this.$store.state.navbar.navbar);
+            this.login()
+
             let navbar = localStorage.getItem('navbar')
             if (navbar != "") {
                 this.navbar_menu = JSON.parse(navbar)
