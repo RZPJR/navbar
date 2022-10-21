@@ -7,48 +7,46 @@
                     <img src="../assets/eden-logo-dev.png" width="70%" height="70%" class="pl-md-3">
                 </v-list-item>
                 <div class="pt-3"/>
-                <div v-for="(item, idx) in navbar_menu" :key="idx">
-                    <div v-if="item.id == '327680' || item.id == '65536'">
-                        <div v-if="!item.child">
-                            <v-list-item color="#FFFFFF" :to="item.url">
+                <div v-for="(item, idx) in navbar" :key="idx">
+                    <div v-if="!item.child">
+                        <v-list-item v-privilege="item.privilege.value" color="#FFFFFF" :to="item.url">
+                            <v-list-item-icon class="p-icon-nav" style="margin-right:14px">
+                                <v-icon>{{item.icon}}</v-icon>
+                            </v-list-item-icon>
+                            <v-list-item-title class="fs13">{{item.title}}</v-list-item-title>
+                        </v-list-item>
+                    </div>
+                    <div v-else>
+                        <v-list-group :value="activeRoute(item.child)" color="#FFFFFF" v-privilege="item.privilege.value">
+                            <template v-slot:activator>
                                 <v-list-item-icon class="p-icon-nav" style="margin-right:14px">
-                                    <v-icon v-if="item.icon == 'mdi-home'">home</v-icon>
-                                    <v-icon v-else>{{item.icon}}</v-icon>
+                                    <v-icon>{{item.icon}}</v-icon>
                                 </v-list-item-icon>
                                 <v-list-item-title class="fs13">{{item.title}}</v-list-item-title>
-                            </v-list-item>
-                        </div>
-                        <div v-else>
-                            <v-list-group :value="activeRoute(item.child)" color="#FFFFFF">
-                                <template v-slot:activator>
-                                    <v-list-item-icon class="p-icon-nav" style="margin-right:14px">
-                                        <v-icon>{{item.icon}}</v-icon>
-                                    </v-list-item-icon>
-                                    <v-list-item-title class="fs13">{{item.title}}</v-list-item-title>
-                                </template>
+                            </template>
+                            <div>
                                 <div v-for="(child, idx) in item.child" :key="idx">
-                                    <div v-if="child.id == '1638400'">
-                                         <v-list-item :to="child.url" >
-                                            <v-list-item-content class="p-icon-nav" style="margin-right:14px">{{child.title}}</v-list-item-content>
-                                        </v-list-item>
-                                        <div class="hr-navbar-new"/>
-                                    </div>
+                                    <v-list-item :to="child.url" v-privilege="child.privilege.value" >
+                                        <v-list-item-content class="p-icon-nav" style="margin-right:14px">{{child.title}}</v-list-item-content>
+                                    </v-list-item>
+                                    <!-- <hr class="mx-4 hr-navbar" v-privilege="child.privilege.value"> -->
+                                    <div class="hr-navbar-new" v-privilege="child.privilege.value"/>
                                 </div>
-                            </v-list-group>
-                        </div>
+                            </div>
+                        </v-list-group>
                     </div>
                 </div>
             </v-list>
         </v-navigation-drawer>
 
         <v-app-bar app color="white" flat class="OpenSans fs14" dense>
-            <v-btn icon v-if="modeDesktop" @click.stop="drawer = !drawer">
+            <v-btn icon v-if="!modeDesktop" @click.stop="drawer = !drawer">
                 <img src="/icon/menu.png">
             </v-btn>
             <v-toolbar-title class="nav-title">{{routeName}}</v-toolbar-title>
             <div class="flex-grow-1 men" ></div>
             <v-btn
-                v-if="!modeDesktop"
+                v-if="modeDesktop"
                 class="no-caps fs14 mr8"
                 text
                 name="logout-btn"
@@ -85,7 +83,7 @@
     </section>
 </template>
 <script>
-    import axios from 'axios';
+    import { mapState, mapActions } from 'vuex'
 
     import { ImageLogo } from "@vue-mf/global";
     import { BgNavbarNew } from "@vue-mf/global";
@@ -112,10 +110,23 @@
                 { text: 'Conversions', icon: 'mdi-flag' },
             ],
             modeDesktop : null,
-            navbar_menu: [],
             logo_url: "",
         }),
+        computed: {
+            ...mapState({
+                navbar: state => state.navbar.navbar.data
+            }),
+            routeName() {
+                return this.$route.meta.title;
+            }
+        },
         methods: {
+            ...mapActions([
+                'fetchNavbar',
+            ]),
+            async fetchAPI() {
+                await this.fetchNavbar()
+            },
             activeRoute(child) {
                 let value = false
                 child.forEach(e => {
@@ -148,7 +159,7 @@
             }
         },
         mounted(){
-            // this.me = this.$store.state.staff
+            this.fetchAPI()
             window.onresize = () => {
                 if (window.screen.width > 1024) {
                     this.modeDesktop = true
@@ -158,20 +169,11 @@
             }
         },
         created () {
-            let navbar = localStorage.getItem('navbar')
-            if (navbar != "") {
-                this.navbar_menu = JSON.parse(navbar)
+            if (window.screen.width > 1024) {
+                this.modeDesktop = true
             } else {
-                axios.get("https://apidev.edenfarm.tech/v1/menu").then(response => {
-                    this.navbar_menu = response.data.data
-                });
+                this.modeDesktop = false
             }
-            // 327680
-            // if (window.screen.width > 1024) {
-            //     this.modeDesktop = true
-            // } else {
-            //     this.modeDesktop = false
-            // }
             // let env = process.env.VUE_APP_LOGO_ENV
             // if (env == 'dev') {
             //     this.logo_url = "/img/eden-logo-dev.png"
@@ -189,11 +191,6 @@
                 this.modeDesktop = false
             }
         },
-        computed: {
-            routeName() {
-                return this.$route.meta.title;
-            }
-        }
     };
 </script>
 <style scoped>

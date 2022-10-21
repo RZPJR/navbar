@@ -4,9 +4,12 @@ import singleSpaVue from "single-spa-vue";
 
 import App from "@/App.vue";
 import router from "./router";
-import vuetify from "./plugins/vuetify"
+import store from './store';
+import http from './plugins/axios';
+import vuetify from "./plugins/vuetify";
 
 Vue.config.productionTip = false;
+Vue.use(http);
 
 const vueLifecycles = singleSpaVue({
   Vue,
@@ -16,6 +19,7 @@ const vueLifecycles = singleSpaVue({
     },
     vuetify,
     router,
+    store,
   },
 });
 
