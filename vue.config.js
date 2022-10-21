@@ -3,13 +3,15 @@ module.exports = {
   configureWebpack: {
     devServer: {
       headers: {
-        "Access-Control-Allow-Origin": "*"
+        "Access-Control-Allow-Origin": "*",
       },
       disableHostCheck: true,
       sockPort: 8501,
-      sockHost: "localhost"
+      sockHost: "localhost",
+      https: true,
+      port: 8501,
     },
-    externals: ["vue", "vue-router", /^@vue-mf\/.+/]
+    externals: ["vue", "vue-router", /^@vue-mf\/.+/],
   },
-  filenameHashing: false
+  filenameHashing: false,
 };
