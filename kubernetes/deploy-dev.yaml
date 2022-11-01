@@ -1,0 +1,89 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fe-navbar
+  labels:
+    app: fe-navbar
+  namespace: fe-navbar
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fe-navbar
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: fe-navbar
+    spec:
+      imagePullSecrets:
+      - name: registry
+      containers:
+      - name: fe-navbar
+        image: git.edenfarm.id:5050/project-version3/erp-dashboard/navbar/dev:<VERSION>
+        ports:
+          - name: http-port
+            containerPort: 8080
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 150Mi
+            cpu: 100m
+          limits:
+            memory: 500Mi
+            cpu: 300m
+        volumeMounts:
+        - name: tz-config
+          mountPath: /etc/localtime
+      volumes:
+        - name: tz-config
+          hostPath:
+            path: /usr/share/zoneinfo/Asia/Jakarta
+            type: File
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-fe-navbar
+  namespace: fe-navbar
+  labels:
+    app: fe-navbar
+spec:
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: http-port
+  selector:
+    app: fe-navbar
+---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: hpa-fe-navbar
+  namespace: fe-navbar
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: fe-navbar
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 75
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 75
