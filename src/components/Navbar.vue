@@ -164,10 +164,19 @@
                     this.$vuetify.theme.dark = true
                     this.dark_mode=true
                 }
+            },
+            async checkPageExist() {
+                let checkPage = await this.navbar.filter((e) => {
+                    return e.url === this.$route.path
+                })
+                if (checkPage.length === 0) {
+                    window.location.replace("/error/404");
+                }
             }
         },
         async mounted(){
             await this.fetchAPI()
+            this.checkPageExist()
             window.onresize = () => {
                 if (window.screen.width > 1024) {
                     this.modeDesktop = true
