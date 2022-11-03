@@ -31,7 +31,7 @@ export default {
     },
     getErrorRoute: function () {
       let url = window.location.href;
-      return url.includes("503") || url.includes("403");
+      return url.includes("auth") || url.includes("503") || url.includes("403");
     },
   },
   mounted() {
