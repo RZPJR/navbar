@@ -117,7 +117,15 @@
                 navbar: state => state.navbar.navbar.data
             }),
             routeName() {
-                return this.$route.meta.title;
+                let path = this.$route.path;
+                let title = ''
+                if (this.navbar.length > 0) {
+                    let selectedPage = this.navbar.filter((e) => {
+                        return e.url === path
+                    })
+                    title = selectedPage[0].title
+                }
+                return title;
             }
         },
         methods: {
@@ -158,8 +166,8 @@
                 }
             }
         },
-        mounted(){
-            this.fetchAPI()
+        async mounted(){
+            await this.fetchAPI()
             window.onresize = () => {
                 if (window.screen.width > 1024) {
                     this.modeDesktop = true
