@@ -8,7 +8,7 @@
                 </v-list-item>
                 <div v-for="(item, idx) in navbar" :key="idx" class="mt3">
                     <div v-if="!item.child">
-                        <v-list-item v-privilege="item.privilege.value" color="#FFFFFF" :to="item.url">
+                        <v-list-item v-privilege="item.privilege.value" color="#FFFFFF" :to="item.url" @click="checkPageExist()">
                             <v-list-item-icon class="p-icon-nav" style="margin-right:14px">
                                 <v-icon>{{item.icon}}</v-icon>
                             </v-list-item-icon>
@@ -25,7 +25,7 @@
                             </template>
                             <div>
                                 <div v-for="(child, idx) in item.child" :key="idx">
-                                    <v-list-item :to="child.url" v-privilege="child.privilege.value" >
+                                    <v-list-item :to="child.url" v-privilege="child.privilege.value" @click="checkPageExist()">
                                         <v-list-item-content class="p-icon-nav" style="margin-right:14px">{{child.title}}</v-list-item-content>
                                     </v-list-item>
                                     <div class="hr-navbar-new" v-privilege="child.privilege.value"/>
@@ -93,7 +93,6 @@
         props: {
             source: String,
         },
-
         components: { 
             ImageLogo,
             ImageLogoStaging,
@@ -102,7 +101,6 @@
             Polygon,
             BgNavbarNew,
         },
-
         data: () => ({
             selectedItem: 1,
             drawer: null,
@@ -156,6 +154,7 @@
                 window.location.replace("/auth");
             },
             async checkPageExist() {
+                console.log('masuk');
                 let checkPage = await this.navbar.filter((e) => {
                     return e.url === this.$route.path
                 })
