@@ -154,7 +154,6 @@
                 window.location.replace("/auth");
             },
             async checkPageExist() {
-                console.log('masuk');
                 let checkPage = await this.navbar.filter((e) => {
                     return e.url === this.$route.path
                 })
