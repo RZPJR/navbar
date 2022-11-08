@@ -45,7 +45,7 @@
                     </v-btn>
                 </v-col>
                 <v-col :cols="!modeDesktop ? 8 : 10">
-                    <v-toolbar-title :class="!modeDesktop ? 'nav-title mt15' : 'nav-title'">{{routeName}}</v-toolbar-title>
+                    <v-toolbar-title :class="!modeDesktop ? 'nav-title mt15' : 'nav-title'">{{title}}</v-toolbar-title>
                 </v-col>
                 <v-col cols="2">
                     <v-btn
@@ -116,22 +116,12 @@
             logo_url: "",
             menu_url: "",
             polygon_url: "",
+            title: ''
         }),
         computed: {
             ...mapState({
                 navbar: state => state.navbar.navbar.data
             }),
-            routeName() {
-                let path = this.$route.path;
-                let title = ''
-                if (this.navbar.length > 0) {
-                    let selectedPage = this.navbar.filter((e) => {
-                        return e.url === path
-                    })
-                    title = selectedPage[0].title
-                }
-                return title;
-            }
         },
         methods: {
             ...mapActions([
@@ -153,12 +143,30 @@
                 localStorage.setItem('bearer', '')
                 window.location.replace("/auth");
             },
-            async checkPageExist() {
-                let checkPage = await this.navbar.filter((e) => {
-                    return e.url === this.$route.path
+            async fetchRouteInformation() {
+                let page = []
+                await this.navbar.map((e) => {
+                    if (e.url === '') {
+                        e.child.map((el) => {
+                            if (el.url === window.location.pathname) {
+                                page = el
+                            }
+                        })
+                    } else {
+                        if (e.url === window.location.pathname) {
+                            page = e
+                        }
+                    }
                 })
-                if (checkPage.length === 0) {
+                return page
+            },
+            async checkPageExist() {
+                let page = await this.fetchRouteInformation()
+                if (page.length === 0) {
                     window.location.replace("/error/404");
+                } else {
+                    document.title = "Dashboard - " + page.title;
+                    this.title = page.title
                 }
             }
         },
