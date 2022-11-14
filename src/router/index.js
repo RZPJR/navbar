@@ -3,7 +3,7 @@ import VueRouter from "vue-router";
 
 Vue.use(VueRouter);
 
-const routes = [{ path: "/", exact: true, redirect: "/Home" }];
+const routes = [{ path: "/", exact: true, redirect: "/auth" }];
 
 const router = new VueRouter({
   mode: "history",
