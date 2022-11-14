@@ -120,6 +120,7 @@
         }),
         computed: {
             ...mapState({
+                staff: state => state.navbar.staff,
                 navbar: state => state.navbar.navbar.data
             }),
         },
@@ -128,7 +129,11 @@
                 'fetchNavbar',
             ]),
             async fetchAPI() {
-                await this.fetchNavbar()
+                if (this.staff !== '' || this.staff !== null) {
+                    await this.fetchNavbar()
+                } else {
+                    window.location.replace('/auth')
+                }
             },
             activeRoute(child) {
                 let value = false
@@ -145,15 +150,16 @@
             },
             async fetchRouteInformation() {
                 let page = []
+                let url_pathname = window.location.pathname
                 await this.navbar.map((e) => {
                     if (e.url === '') {
                         e.child.map((el) => {
-                            if (el.url === window.location.pathname) {
+                            if (url_pathname.includes(el.url)) {
                                 page = el
                             }
                         })
                     } else {
-                        if (e.url === window.location.pathname) {
+                        if (url_pathname.includes(e.url)) {
                             page = e
                         }
                     }
@@ -163,7 +169,7 @@
             async checkPageExist() {
                 let page = await this.fetchRouteInformation()
                 if (page.length === 0) {
-                    // window.location.replace("/error/404");
+                    window.location.replace("/error/404");
                 } else {
                     document.title = "Dashboard - " + page.title;
                     this.title = page.title
