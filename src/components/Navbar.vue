@@ -134,6 +134,7 @@
                     window.location.replace('/auth')
                 } else {
                     await this.fetchNavbar()
+                    this.checkPageExist()
                 }
             },
             activeRoute(child) {
@@ -182,7 +183,6 @@
         },
         async mounted(){
             await this.fetchAPI()
-            this.checkPageExist()
             window.onresize = () => {
                 if (window.screen.width > 1024) {
                     this.modeDesktop = true
