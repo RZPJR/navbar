@@ -129,7 +129,6 @@
                 'fetchNavbar',
             ]),
             async fetchAPI() {
-                console.log(this.staff);
                 if (this.staff === '' || this.staff === null || this.staff === undefined) {
                     window.location.replace('/auth')
                 } else {
