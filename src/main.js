@@ -356,34 +356,6 @@ Vue.mixin({
           let val = (value / 1).toFixed(0).replace('.', ',')
           return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
       },
-      formatDate(val) {
-          if (val) {
-              return this.$moment(val).format('YYYY-MM-DD')
-          }
-      },
-      formatDateRange(val) {
-          if (val.length > 0) {
-              let ret = ''
-              if (val.length == 1) {
-                  let date = val[0]
-                  ret = this.$moment(date).format('YYYY-MM-DD')
-              } else {
-                  let date = val[0]
-                  let date2 = val[1]
-                  if (date > date2) {
-                      ret = this.$moment(date2).format('YYYY-MM-DD') + ' to ' + this.$moment(date).format('YYYY-MM-DD')
-                  } else {
-                      ret = this.$moment(date).format('YYYY-MM-DD') + ' to ' + this.$moment(date2).format('YYYY-MM-DD')
-                  }
-              }
-              return ret
-          }
-      },
-      formatTime(val) {
-          if (val) {
-              return this.$moment(val).format('HH:mm')
-          }
-      },
       toUpperCase(val) {
           return val.toUpperCase()
       },
