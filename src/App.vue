@@ -1,7 +1,7 @@
 <template>
     <div>
-        <div v-if="getStatusLogin && !isLoading">
-            <NavBar v-if="!isLoading && !getErrorRoute" v-show="getStatusLogin" />
+        <div v-if="!isLoading">
+            <NavBar v-if="!isLoading && !getErrorRoute"/>
         </div>
         <v-main v-if="!isLoading">
             <router-view />
@@ -21,14 +21,6 @@
             return { isLoading: true };
         },
         computed: {
-            getStatusLogin: function () { //get status login
-                var valToken = localStorage.getItem("bearer");
-                if (valToken !== "") {
-                    return true;
-                } else {
-                    return false;
-                }
-            },
             getErrorRoute: function () { //hide navbar when auth and error
                 let url = window.location.href;
                 return url.includes("auth") || url.includes("error")

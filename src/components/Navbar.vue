@@ -25,7 +25,7 @@
                             </template>
                             <div>
                                 <div v-for="(child, idx) in item.child" :key="idx">
-                                    <v-list-item :to="child.url" v-privilege="child.privilege.value" @click="checkPageExist()">
+                                    <v-list-item :to="child.url" v-privilege="child.privilege.value" @click="checkPageExist(child.url)">
                                         <v-list-item-content class="p-icon-nav" style="margin-right:14px">{{child.title}}</v-list-item-content>
                                     </v-list-item>
                                     <div class="hr-navbar-new" v-privilege="child.privilege.value"/>
@@ -129,10 +129,11 @@
                 'fetchNavbar',
             ]),
             async fetchAPI() {
-                if (this.staff !== '' || this.staff !== null) {
-                    await this.fetchNavbar()
-                } else {
+                console.log(this.staff);
+                if (this.staff === '' || this.staff === null || this.staff === undefined) {
                     window.location.replace('/auth')
+                } else {
+                    await this.fetchNavbar()
                 }
             },
             activeRoute(child) {
@@ -166,13 +167,16 @@
                 })
                 return page
             },
-            async checkPageExist() {
+            async checkPageExist(url) {
                 let page = await this.fetchRouteInformation()
                 if (page.length === 0) {
-                    window.location.replace("/error/404");
+                    // window.location.replace("/error/404");
                 } else {
                     document.title = "Dashboard - " + page.title;
                     this.title = page.title
+                    if (url) {
+                        window.location.replace(url)
+                    }
                 }
             }
         },
