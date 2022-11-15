@@ -170,7 +170,7 @@
             async checkPageExist(url) {
                 let page = await this.fetchRouteInformation()
                 if (page.length === 0) {
-                    // window.location.replace("/error/404");
+                    window.location.replace("/error/404");
                 } else {
                     document.title = "Dashboard - " + page.title;
                     this.title = page.title
