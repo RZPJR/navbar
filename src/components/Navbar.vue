@@ -8,7 +8,7 @@
                 </v-list-item>
                 <div v-for="(item, idx) in navbar" :key="idx" class="mt3">
                     <div v-if="!item.child">
-                        <v-list-item v-privilege="item.privilege.value" color="#FFFFFF" :to="item.url" @click="checkPageExist()">
+                        <v-list-item v-privilege="item.permission_id" color="#FFFFFF" :to="item.url" @click="checkPageExist()">
                             <v-list-item-icon class="p-icon-nav" style="margin-right:14px">
                                 <v-icon>{{item.icon}}</v-icon>
                             </v-list-item-icon>
@@ -16,7 +16,7 @@
                         </v-list-item>
                     </div>
                     <div v-else>
-                        <v-list-group :value="activeRoute(item.child)" color="#FFFFFF" v-privilege="item.privilege.value">
+                        <v-list-group :value="activeRoute(item.child)" color="#FFFFFF" v-privilege="item.permission_id">
                             <template v-slot:activator>
                                 <v-list-item-icon class="p-icon-nav" style="margin-right:14px">
                                     <v-icon>{{item.icon}}</v-icon>
@@ -25,10 +25,10 @@
                             </template>
                             <div>
                                 <div v-for="(child, idx) in item.child" :key="idx">
-                                    <v-list-item :to="child.url" v-privilege="child.privilege.value" @click="checkPageExist(child.url)">
+                                    <v-list-item :to="child.url" v-privilege="child.permission_id" @click="checkPageExist(child.url)">
                                         <v-list-item-content class="p-icon-nav" style="margin-right:14px">{{child.title}}</v-list-item-content>
                                     </v-list-item>
-                                    <div class="hr-navbar-new" v-privilege="child.privilege.value"/>
+                                    <div class="hr-navbar-new" v-privilege="child.permission_id"/>
                                 </div>
                             </div>
                         </v-list-group>
@@ -120,7 +120,7 @@
         }),
         computed: {
             ...mapState({
-                staff: state => state.navbar.staff,
+                bearer: state => state.navbar.bearer,
                 navbar: state => state.navbar.navbar.data
             }),
         },
@@ -129,7 +129,7 @@
                 'fetchNavbar',
             ]),
             async fetchAPI() {
-                if (this.staff === '' || this.staff === null || this.staff === undefined) {
+                if (this.bearer === '' || this.bearer === null || this.bearer === undefined) {
                     window.location.replace('/auth')
                 } else {
                     await this.fetchNavbar()
@@ -152,7 +152,7 @@
             async fetchRouteInformation() {
                 let page = []
                 let url_pathname = window.location.pathname
-                await this.navbar.map((e) => {
+                await this.navbar?.map((e) => {
                     if (e.url === '') {
                         e.child.map((el) => {
                             if (url_pathname.includes(el.url)) {
@@ -170,7 +170,7 @@
             async checkPageExist(url) {
                 let page = await this.fetchRouteInformation()
                 if (page.length === 0) {
-                    window.location.replace("/error/404");
+                    // window.location.replace("/error/404");
                 } else {
                     document.title = "Dashboard - " + page.title;
                     this.title = page.title

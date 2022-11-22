@@ -1,5 +1,5 @@
 const state = {
-    staff: localStorage.getItem('staff_id'),
+    bearer: localStorage.getItem('bearer'),
     navbar: {
         data: [],
         isLoading: false
