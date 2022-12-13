@@ -95,7 +95,7 @@ metadata:
   namespace: fe-navbar
 spec:
   dnsNames:
-    - navbar.edenfarm.tech
+    - fe-navbar.edenfarm.tech
   secretName: fe-navbar-tls
   issuerRef:
     name: letsencrypt-cluster-issuer
@@ -111,10 +111,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - navbar.edenfarm.tech
+    - fe-navbar.edenfarm.tech
     secretName: fe-navbar-tls
   rules:
-  - host: navbar.edenfarm.tech
+  - host: fe-navbar.edenfarm.tech
     http:
       paths:
       - path: /
