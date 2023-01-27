@@ -12,7 +12,7 @@
                             <v-list-item-icon class="p-icon-nav" style="margin-right:14px">
                                 <v-icon>{{item.icon}}</v-icon>
                             </v-list-item-icon>
-                            <v-list-item-content class="fs13">{{item.title}}</v-list-item-content>
+                            <v-list-item-content class="fs13" :data-unq="`parent-menu-${item.title}`">{{item.title}}</v-list-item-content>
                         </v-list-item>
                     </div>
                     <div v-else>
@@ -21,12 +21,12 @@
                                 <v-list-item-icon class="p-icon-nav" style="margin-right:14px">
                                     <v-icon>{{item.icon}}</v-icon>
                                 </v-list-item-icon>
-                                <v-list-item-content class="fs13">{{item.title}}</v-list-item-content>
+                                <v-list-item-content class="fs13" :data-unq="`parent-menu-${item.title}`">{{item.title}}</v-list-item-content>
                             </template>
                             <div>
                                 <div v-for="(child, idx) in item.child" :key="idx">
                                     <v-list-item :to="child.url" v-privilege="child.permission_id" @click="checkPageExist(child.url)">
-                                        <v-list-item-content class="p-icon-nav" style="margin-right:14px">{{child.title}}</v-list-item-content>
+                                        <v-list-item-content class="p-icon-nav" style="margin-right:14px" :data-unq="`child-menu-${child.title}`">{{child.title}}</v-list-item-content>
                                     </v-list-item>
                                     <div class="hr-navbar-new" v-privilege="child.permission_id"/>
                                 </div>
@@ -86,7 +86,7 @@
 <script>
     import { mapState, mapActions } from 'vuex'
 
-    import { ImageLogo, ImageLogoStaging, ImageLogoDev, Menu, Polygon } from "@vue-mf/global";
+    import { ImageLogo, ImageLogoStaging, ImageLogoDev, Menu } from "@vue-mf/global";
     import { BgNavbarNew } from "@vue-mf/global";
 
     export default {
@@ -98,7 +98,6 @@
             ImageLogoStaging,
             ImageLogoDev,
             Menu, 
-            Polygon,
             BgNavbarNew,
         },
         data: () => ({
@@ -205,7 +204,7 @@
                 this.logo_url = ImageLogo
             }
             this.menu_url = Menu
-            this.polygon_url = Polygon
+            // this.polygon_url = Polygon
         },
         beforeCreate() {
             if (window.screen.width > 1024) {
