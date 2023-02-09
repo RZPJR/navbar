@@ -4,6 +4,7 @@
             <NavBar v-if="!isLoading && !getErrorRoute"/>
         </div>
         <v-main v-if="!isLoading">
+            <BreadcrumbsNew v-if="breadcrumbs"/>
             <router-view />
         </v-main>
     </div>
@@ -11,14 +12,37 @@
 
 <script>
     import NavBar from "./components/Navbar.vue";
+    import BreadcrumbsNew from "./components/BreadcrumbsNew.vue";
 
     export default {
         name: "App",
         components: {
             NavBar,
+            BreadcrumbsNew
         },
         data() {
-            return { isLoading: true };
+            return { 
+                isLoading: true,
+                breadcrumbs : false
+            };
+        },
+        watch: { 
+            '$route' () {
+                let self = this 
+                setTimeout(() => {
+                    self.getBreadcrumbs()
+                }, 100);
+            } 
+        },
+        methods : {
+            getBreadcrumbs() {
+                let route = JSON.parse(localStorage.getItem("route"))
+                if (route && route.meta.breadcrumbs) {
+                    this.breadcrumbs = true
+                } else {
+                    this.breadcrumbs = false
+                }
+            }
         },
         computed: {
             getErrorRoute: function () { //hide navbar when auth and error
@@ -30,6 +54,7 @@
             setTimeout(() => {
                 this.isLoading = false;
             }, 50);
+            this.getBreadcrumbs()
         },
     };
 </script>
