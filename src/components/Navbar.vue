@@ -156,6 +156,8 @@
                         e.child.map((el) => {
                             if (url_pathname.includes(el.url)) {
                                 page = el
+                            } else if (url_pathname.includes('weigh-scale')) {
+                                page = el
                             }
                         })
                     } else {
