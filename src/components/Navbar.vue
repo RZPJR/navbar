@@ -171,6 +171,7 @@
             async checkPageExist(url) {
                 let page = await this.fetchRouteInformation()
                 if (page.length === 0) {
+                    // window.location.replace("/error/404")
                     // this.$router.push("/error/404").catch(error => {
                     //     if (error.name != "NavigationDuplicated") {
                     //         throw error;
