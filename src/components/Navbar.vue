@@ -169,21 +169,23 @@
             async checkPageExist(url) {
                 let page = await this.fetchRouteInformation()
                 if (page.length === 0) {
-                    this.$router.push("/error/404").catch(error => {
-                        if (error.name != "NavigationDuplicated") {
-                            throw error;
-                        }
-                    });
+                    window.location.replace("/error/404");
+                    // this.$router.push("/error/404").catch(error => {
+                    //     if (error.name != "NavigationDuplicated") {
+                    //         throw error;
+                    //     }
+                    // });
                 } else {
                     document.title = "Dashboard - " + page.title;
                     this.title = page.title
                     this.setTitle()
                     if (url) {
-                        this.$router.push(url).catch(error => {
-                            if (error.name != "NavigationDuplicated") {
-                                throw error;
-                            }
-                        });
+                        window.location.replace(url)
+                        // this.$router.push(url).catch(error => {
+                        //     if (error.name != "NavigationDuplicated") {
+                        //         throw error;
+                        //     }
+                        // });
                     }
                 }
             },
