@@ -169,11 +169,11 @@
             async checkPageExist(url) {
                 let page = await this.fetchRouteInformation()
                 if (page.length === 0) {
-                    this.$router.push("/error/404").catch(error => {
-                        if (error.name != "NavigationDuplicated") {
-                            throw error;
-                        }
-                    });
+                    // this.$router.push("/error/404").catch(error => {
+                    //     if (error.name != "NavigationDuplicated") {
+                    //         throw error;
+                    //     }
+                    // });
                 } else {
                     document.title = "Dashboard - " + page.title;
                     this.title = page.title
