@@ -156,6 +156,8 @@
                         e.child.map((el) => {
                             if (url_pathname.includes(el.url)) {
                                 page = el
+                            } else if (url_pathname.includes('weigh-scale')) {
+                                page = el
                             }
                         })
                     } else {
@@ -169,7 +171,6 @@
             async checkPageExist(url) {
                 let page = await this.fetchRouteInformation()
                 if (page.length === 0) {
-                    window.location.replace("/error/404");
                     // this.$router.push("/error/404").catch(error => {
                     //     if (error.name != "NavigationDuplicated") {
                     //         throw error;
