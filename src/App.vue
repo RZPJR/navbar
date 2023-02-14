@@ -32,12 +32,15 @@
                 setTimeout(() => {
                     self.getBreadcrumbs()
                 }, 100);
+                setTimeout(() => {
+                    self.getBreadcrumbs()
+                }, 1000);
             } 
         },
         methods : {
             getBreadcrumbs() {
                 let route = JSON.parse(localStorage.getItem("route"))
-                if (route && route.meta.breadcrumbs) {
+                if (route.meta.breadcrumbs) {
                     this.breadcrumbs = true
                 } else {
                     this.breadcrumbs = false
@@ -55,6 +58,10 @@
                 this.isLoading = false;
             }, 50);
             this.getBreadcrumbs()
+            let self = this 
+            setTimeout(() => {
+                self.getBreadcrumbs()
+            }, 1000);
         },
     };
 </script>
