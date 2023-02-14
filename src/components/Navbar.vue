@@ -196,6 +196,13 @@
                 if (route && route.meta.title) {
                     this.title = route.meta.title
                 }
+                let self = this
+                setTimeout(() => {
+                    let route = JSON.parse(localStorage.getItem("route"))
+                    if (route && route.meta.title) {
+                        self.title = route.meta.title
+                    }
+                }, 1000);
             }
         },
         watch: { 
