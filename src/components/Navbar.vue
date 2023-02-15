@@ -197,7 +197,7 @@
                     this.title = route.meta.title
                 }
                 let self = this
-                setTimeout(() => {
+                setInterval(() => {
                     let route = JSON.parse(localStorage.getItem("route"))
                     if (route && route.meta.title) {
                         self.title = route.meta.title
