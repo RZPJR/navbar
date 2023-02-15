@@ -33,9 +33,12 @@ export default {
         setTimeout(() => {
             self.updateList() 
         }, 200);
-    } },
-    created() {
-        this.updateList()
+    }},
+    mounted() {
+        let self = this 
+        setInterval(() => {
+            self.updateList() 
+        }, 200);
     },
     computed:{
         item(){

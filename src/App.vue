@@ -59,7 +59,7 @@
             }, 50);
             this.getBreadcrumbs()
             let self = this 
-            setTimeout(() => {
+            setInterval(() => {
                 self.getBreadcrumbs()
             }, 1000);
         },
