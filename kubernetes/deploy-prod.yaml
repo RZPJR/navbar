@@ -1,0 +1,149 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fe-navbar
+  labels:
+    app: fe-navbar
+  namespace: fe-navbar
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fe-navbar
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: fe-navbar
+    spec:
+      imagePullSecrets:
+      - name: registry
+      containers:
+      - name: fe-navbar
+        image: git.edenfarm.id:5050/project-version3/erp-dashboard/navbar/master:<VERSION>
+        ports:
+          - name: http-port
+            containerPort: 8080
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 50Mi
+            cpu: 15m
+          limits:
+            memory: 350Mi
+            cpu: 200m
+        volumeMounts:
+        - name: tz-config
+          mountPath: /etc/localtime
+      volumes:
+        - name: tz-config
+          hostPath:
+            path: /usr/share/zoneinfo/Asia/Jakarta
+            type: File
+      tolerations:
+      - key: instance_type
+        value: service
+        effect: NoSchedule
+        operator: Equal
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: role
+                operator: In
+                values:
+                - devops
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - fe-navbar
+            topologyKey: kubernetes.io/hostname
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-fe-navbar
+  namespace: fe-navbar
+  labels:
+    app: fe-navbar
+spec:
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: http-port
+  selector:
+    app: fe-navbar
+---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: hpa-fe-navbar
+  namespace: fe-navbar
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: fe-navbar
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 75
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 75
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: fe-navbar
+  namespace: fe-navbar
+spec:
+  dnsNames:
+    - fe-navbar.edenfarm.id
+  secretName: fe-navbar-tls
+  issuerRef:
+    name: letsencrypt-cluster-issuer
+    kind: ClusterIssuer
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: fe-navbar
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+  name: fe-navbar
+spec:
+  tls:
+  - hosts:
+    - fe-navbar.edenfarm.id
+    secretName: fe-navbar-tls
+  rules:
+  - host: fe-navbar.edenfarm.id
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: svc-fe-navbar
+            port:
+              number: 80
