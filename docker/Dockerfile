@@ -3,6 +3,7 @@ FROM node:16-alpine AS builder
 WORKDIR /app
 COPY . .
 
+RUN cat .env
 RUN yarn install
 RUN yarn build
 
