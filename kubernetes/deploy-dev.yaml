@@ -3,7 +3,6 @@ kind: Namespace
 metadata:
   name: fe-navbar
 
-
 ---
 apiVersion: v1
 kind: Secret
@@ -13,7 +12,6 @@ metadata:
 data:
   .dockerconfigjson: ewoJImF1dGhzIjogewoJCSJnaXQuZWRlbmZhcm0uaWQ6NTA1MCI6IHsKCQkJImF1dGgiOiAiYkdsdVoyZHZPbnBDU2xwTldYRk9OVlJWT0ZaNlJ6YzRhRzloIgoJCX0KCX0KfQ==
 type: kubernetes.io/dockerconfigjson
-
 
 ---
 apiVersion: apps/v1
@@ -42,7 +40,7 @@ spec:
       - name: registry
       containers:
       - name: fe-navbar
-        image: git.edenfarm.id:5050/project-version3/erp-dashboard/navbar/eks-dev:<VERSION>
+        image: git.edenfarm.id:5050/project-version3/erp-dashboard/navbar/dev:<VERSION>
         ports:
         - name: http-port
           containerPort: 8080
@@ -146,9 +144,10 @@ kind: Ingress
 metadata:
   namespace: fe-navbar
   annotations:
-    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /
   name: fe-navbar
 spec:
+  ingressClassName: nginx
   tls:
   - hosts:
     - fe-navbar.edenfarm.tech
